@@ -12,20 +12,22 @@ export class CountryService implements OnModuleInit {
     const url = `https://restcountries.com/v3.1/all`;
     const response = await firstValueFrom(this.httpService.get(url));
     const countries = response.data;
-  
+
+    // Filter the countries
     const filteredCountries = countries.map(country => ({
-      name: country.name.common,
-      code: country.cca2,
-      continent: country.region, // Use 'region' as the continent
+      name: country.name.common,     // Use 'name.common' as the country name
+      code: country.cca2,            // Use 'cca2' as the country code
+      continent: country.region,     // Use 'region' as the continent
     }));
 
     return filteredCountries;
   }
-
+  
+  // Save the countries to a file
   async saveCountriesToFile(): Promise<void> {
-    const countries = await this.getCountries();
-    const filePath = path.join(__dirname, 'countries.json');
-    fs.writeFileSync(filePath, JSON.stringify(countries, null, 2));
+    const countries = await this.getCountries(); // Get the countries
+    const filePath = path.join(__dirname, 'countries.json'); // Define the file path
+    fs.writeFileSync(filePath, JSON.stringify(countries, null, 2)); // Write the countries to the file
   }
 
   async onModuleInit() {
