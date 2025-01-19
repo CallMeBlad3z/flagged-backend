@@ -11,7 +11,10 @@ import { EmailModule } from './email/email.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    HttpModule,
+    HttpModule.register({
+      timeout: 10000,
+      maxRedirects: 5,
+    }),
     CountryModule,
     EmailModule,
   ],
