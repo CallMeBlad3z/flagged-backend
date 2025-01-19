@@ -1,18 +1,31 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 async function bootstrap() {
+  const httpsOptions = {
+    key: readFileSync('/etc/ssl/cloudflare/flagged-app.key'),
+    cert: readFileSync('/etc/ssl/cloudflare/flagged-app.pem'),
+  };
+
   const app = await NestFactory.create(AppModule, {
+    httpsOptions,
     logger: ['log', 'error', 'warn', 'debug', 'verbose'], // Enable all log levels
   });
+
+  // Log HTTPS options to confirm they are being used
+  //Logger.log('HTTPS options:', httpsOptions);
+
   // Configure CORS
   app.enableCors({
-    origin: 'http://localhost:8081', // Replace with your Expo development server URL
+    origin: 'https://flagged-app.com',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
+
   await app.listen(3000);
+  Logger.log('Application is running on: ' + await app.getUrl());
 }
 bootstrap();
