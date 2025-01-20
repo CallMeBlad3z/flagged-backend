@@ -6,8 +6,8 @@ import { join } from 'path';
 
 async function bootstrap() {
   const httpsOptions = {
-    key: readFileSync('/etc/ssl/cloudflare/flagged-app.key'),
-    cert: readFileSync('/etc/ssl/cloudflare/flagged-app.pem'),
+    key: readFileSync(process.env.SSL_KEY),
+    cert: readFileSync(process.env.SSL_CERT),
   };
 
   const app = await NestFactory.create(AppModule, {
