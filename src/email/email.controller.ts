@@ -13,4 +13,13 @@ export class EmailController {
   ) {
     return this.emailService.sendBugReport(fromEmail, subject, bugReport);
   }
+
+  @Post('contact-us')
+  async contactUs(
+    @Body('fromEmail') fromEmail: string,
+    @Body('subject') subject: string,
+    @Body('message') message: string,
+  ) {
+    return this.emailService.sendContactUs(fromEmail, subject, message);
+  }
 }
